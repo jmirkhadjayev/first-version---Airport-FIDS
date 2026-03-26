@@ -102,6 +102,9 @@ export default function App() {
     if (s.includes('cancelled') || s.includes('bekor') || s.includes('delayed')) {
       return 'bg-red-500/10 text-red-600 border-red-500/20';
     }
+    if (s.includes('arrival')) {
+      return 'bg-[#03AC13]/10 text-[#03AC13] border-[#03AC13]/20';
+    }
     if (s.includes('landed') || s.includes('qo\'ndi') || s.includes('departed') || s.includes('arrived')) {
       return 'bg-green-500/10 text-green-600 border-green-500/20';
     }

@@ -73,6 +73,7 @@ const STATUS_MAPPING: Record<string, string> = {
   'LND': 'Landed',
   'BOR': 'Boarding',
   'CKI': 'Check-in',
+  'ONB': 'ARRIVAL',
 };
 
 const CITY_MAPPING: Record<string, string> = {
