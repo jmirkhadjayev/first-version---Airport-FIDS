@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo, Fragment } from 'react';
+import { useState, useEffect, useMemo, Fragment, useRef } from 'react';
 import { useLocation, useNavigate, Routes, Route, Navigate } from 'react-router-dom';
 import { 
   Search, 
@@ -23,6 +23,7 @@ export default function App() {
   const location = useLocation();
   const navigate = useNavigate();
   const [flights, setFlights] = useState<Flight[]>([]);
+  const flightRefs = useRef<Record<string, HTMLDivElement | null>>({});
   
   // Derive activeTab from URL
   const activeTab = location.pathname.includes('/arrivals') ? 'ARRIVAL' : 'DEPARTURE';
@@ -42,11 +43,44 @@ export default function App() {
     return () => clearInterval(timer);
   }, []);
 
+  const scrollToCurrentFlight = () => {
+    if (flights.length === 0 || search) return;
+
+    const now = new Date();
+    const currentMinutes = now.getHours() * 60 + now.getMinutes();
+    
+    let closestFlightId = '';
+    let minDiff = Infinity;
+
+    flights.forEach((f, idx) => {
+      if (!f.scheduled_time) return;
+      const [hours, minutes] = f.scheduled_time.split(':').map(Number);
+      const flightMinutes = hours * 60 + minutes;
+      const diff = Math.abs(currentMinutes - flightMinutes);
+      
+      if (diff < minDiff) {
+        minDiff = diff;
+        closestFlightId = `${f.flight_number}-${idx}`;
+      }
+    });
+
+    if (closestFlightId && flightRefs.current[closestFlightId]) {
+      flightRefs.current[closestFlightId]?.scrollIntoView({
+        behavior: 'smooth',
+        block: 'center'
+      });
+    }
+  };
+
   const loadFlights = async (silent = false) => {
     if (!silent) setLoading(true);
     const data = await fetchFlights(activeTab);
     setFlights(data);
-    if (!silent) setLoading(false);
+    if (!silent) {
+        setLoading(false);
+        // Scroll after small delay to ensure rendering is complete
+        setTimeout(scrollToCurrentFlight, 500);
+    }
   };
 
   useEffect(() => {
@@ -281,7 +315,16 @@ export default function App() {
                         animate={{ y: 0, opacity: 1 }}
                         transition={{ delay: idx * 0.02 }}
                         onClick={() => setSelectedFlight(flight)}
-                        className="bg-white rounded-xl p-3 md:px-10 md:py-4 border border-gray-100 shadow-sm hover:shadow-md hover:border-airport-navy/10 transition-all cursor-pointer group"
+                        ref={el => flightRefs.current[`${flight.flight_number}-${idx}`] = el}
+                        className={`bg-white rounded-xl p-3 md:px-10 md:py-4 border shadow-sm transition-all cursor-pointer group ${
+                          // Highlight if within 15 minutes of current time
+                          (() => {
+                            const [h, m] = (flight.scheduled_time || "00:00").split(':').map(Number);
+                            const fMin = h * 60 + m;
+                            const curMin = currentTime.getHours() * 60 + currentTime.getMinutes();
+                            return Math.abs(fMin - curMin) <= 15 ? 'border-airport-gold ring-2 ring-airport-gold/20 scale-[1.01] z-10' : 'border-gray-100 hover:shadow-md hover:border-airport-navy/10';
+                          })()
+                        }`}
                       >
                         <div className="grid grid-cols-1 md:grid-cols-[0.8fr_0.8fr_0.8fr_0.8fr_1.5fr_0.6fr_0.7fr_0.7fr_1.5fr_0.7fr_0.7fr_1fr] gap-4 items-center">
                           {/* Scheduled */}
@@ -403,7 +446,16 @@ export default function App() {
                         animate={{ y: 0, opacity: 1 }}
                         transition={{ delay: idx * 0.02 }}
                         onClick={() => setSelectedFlight(flight)}
-                        className="bg-white rounded-xl p-3 md:px-10 md:py-4 border border-gray-100 shadow-sm hover:shadow-md hover:border-airport-navy/10 transition-all cursor-pointer group"
+                        ref={el => flightRefs.current[`${flight.flight_number}-${idx}`] = el}
+                        className={`bg-white rounded-xl p-3 md:px-10 md:py-4 border shadow-sm transition-all cursor-pointer group ${
+                          // Highlight if within 15 minutes of current time
+                          (() => {
+                            const [h, m] = (flight.scheduled_time || "00:00").split(':').map(Number);
+                            const fMin = h * 60 + m;
+                            const curMin = currentTime.getHours() * 60 + currentTime.getMinutes();
+                            return Math.abs(fMin - curMin) <= 15 ? 'border-airport-gold ring-2 ring-airport-gold/20 scale-[1.01] z-10' : 'border-gray-100 hover:shadow-md hover:border-airport-navy/10';
+                          })()
+                        }`}
                       >
                         <div className="grid grid-cols-1 md:grid-cols-[0.8fr_0.8fr_0.8fr_0.8fr_1.5fr_0.6fr_0.7fr_0.7fr_1.5fr_0.7fr_0.7fr_1fr] gap-4 items-center">
                           {/* Scheduled */}
