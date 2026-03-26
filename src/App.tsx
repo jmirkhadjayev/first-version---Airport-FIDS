@@ -720,12 +720,8 @@ export default function App() {
       <footer className="bg-airport-navy text-white py-20 px-10">
         <div className="max-w-full mx-auto flex flex-col md:flex-row justify-between items-center gap-16">
           <div className="flex items-center gap-6">
-            <div className="w-16 h-16 bg-white rounded-2xl flex items-center justify-center shadow-lg overflow-hidden">
-              <img src="/header_logo.png" alt="Uzbekistan Airports" className="w-full h-full object-contain p-2" />
-            </div>
-            <div>
-              <span className="font-black uppercase tracking-tighter text-3xl block">Uzbekistan <span className="text-airport-gold">Airports</span></span>
-              <span className="text-[12px] font-bold text-gray-400 uppercase tracking-[0.3em]">Official Information Board</span>
+            <div className="h-16 md:h-20 bg-white rounded-2xl flex items-center justify-center shadow-lg overflow-hidden p-2">
+              <img src="header_logo.png" alt="Uzbekistan Airports" className="h-full w-auto object-contain" />
             </div>
           </div>
           <div className="flex gap-16 text-sm font-black uppercase tracking-widest text-gray-400">
