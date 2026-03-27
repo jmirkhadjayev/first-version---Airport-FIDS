@@ -25,4 +25,4 @@ Ushbu loyiha React 19, Vite va Tailwind CSS texnologiyalari yordamida yaratilgan
    ```
 
 ---
-© 2026 Tashkent International Airport. All rights reserved.
+created by [Jamshid Mirkhadjayev](http://mirkhadjayev.uz/)

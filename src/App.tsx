@@ -732,7 +732,7 @@ export default function App() {
             <a href="#" className="hover:text-airport-gold transition-colors">Terms of Service</a>
             <a href="#" className="hover:text-airport-gold transition-colors">Contact Us</a>
           </div>
-          <p className="text-[12px] text-gray-500 font-black uppercase tracking-widest">© 2026 Tashkent International Airport. All rights reserved.</p>
+          <p className="text-[12px] text-gray-500 font-black uppercase tracking-widest">created by <a href="http://mirkhadjayev.uz/" target="_blank" rel="noopener noreferrer" className="hover:text-airport-gold transition-colors underline decoration-airport-gold/30 underline-offset-4">Jamshid Mirkhadjayev</a></p>
         </div>
       </footer>
     </div>
